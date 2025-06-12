@@ -16,7 +16,12 @@ from googleScripts.Transaction import Transaction
 load_dotenv()
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-URL = ["https://www.googleapis.com/auth/gmail.readonly", "https://www.googleapis.com/auth/spreadsheets", 'https://www.googleapis.com/auth/drive.readonly']
+URL = [
+    "https://mail.google.com/",
+    "https://www.googleapis.com/auth/spreadsheets",
+    'https://www.googleapis.com/auth/drive.readonly'
+]
+
 CREDENTIALS_FILE = os.path.join(SCRIPT_DIR, 'google_credentials.json')
 TOKEN_FILE = os.path.join(SCRIPT_DIR, 'google_token.json')
 TARGET_LABEL = os.getenv("TARGET_LABEL")
@@ -36,11 +41,7 @@ def get_credentials():
             creds.refresh(Request())
         else:
             if not os.path.exists(CREDENTIALS_FILE):
-                print(f"Error: '{CREDENTIALS_FILE}' not found.")
-                print("Please download your OAuth 2.0 Client ID JSON file from Google Cloud Console:")
-                print("  APIs & Services -> Credentials -> Your_OAuth_Client_ID -> Download JSON.")
-                print("  Save it as 'credentials.json' in the same directory as this script.")
-                return
+                raise EnvironmentError(f"Error: '{CREDENTIALS_FILE}' not found.")
 
             print("Opening browser for Google authentication...")
             flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, URL)
@@ -90,6 +91,10 @@ def get_emails_under_label(label_id, service):
         transaction_email = decode_payload_of_email(message)
         print(transaction_email)
         all_transactions.append(transaction_email)
+        print(message_id['id'])
+        service.users().messages().delete(userId='me', id=message_id['id']).execute()
+
+
     return all_transactions
 
 def decode_payload_of_email(message):
