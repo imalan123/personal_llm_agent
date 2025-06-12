@@ -8,3 +8,5 @@ Please use this if new updates are required:
 .env:
 - llm model name you are using
 - local port your ollama is being hosted on
+- label you are using for email
+- name of spreadsheet you want to add
