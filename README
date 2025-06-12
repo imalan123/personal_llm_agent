@@ -1,0 +1,10 @@
+To install dependencies:
+- pip install -r dependencies.txt
+
+If you wish to update dependencies with current dependencies.
+Please use this if new updates are required:
+- pip freeze > dependencies.txt
+
+.env:
+- llm model name you are using
+- local port your ollama is being hosted on
